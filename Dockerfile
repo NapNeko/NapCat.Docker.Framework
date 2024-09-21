@@ -34,8 +34,7 @@ RUN apt-get update && apt-get install -y \
     /tmp/* \
     /var/tmp/* && \
     mkdir -p ~/.vnc && \
-    chmod +x /root/start.sh
-
+    chmod +x /root/start.sh && \ 
     echo "${TZ}" > /etc/timezone && \ 
     ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
     apt autoremove -y && \
@@ -72,6 +71,6 @@ RUN apt-get update && apt-get install -y \
     echo "[program:qq]" >> /etc/supervisord.conf && \
     echo "command=qq --no-sandbox" >> /etc/supervisord.conf && \
     echo 'environment=DISPLAY=":1"' >> /etc/supervisord.conf
-    
+
 VOLUME ["/opt/QQ/resources/app/LiteLoader"]
 CMD ["/bin/bash", "-c", "startx & sh /root/start.sh"]
