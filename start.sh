@@ -1,6 +1,4 @@
 #!/bin/bash
-chmod 777 /tmp &
-chmod 777 /opt/QQ &
 
 mkdir -p /opt/QQ/resources/app/LiteLoader/plugins/NapCat
 
@@ -14,7 +12,11 @@ if [ ! -f "/opt/QQ/resources/app/LiteLoader/plugins/NapCat/manifest.json" ]; the
     unzip /tmp/NapCat.zip -d /opt/QQ/resources/app/LiteLoader/plugins/NapCat/
 fi
 
+chmod 777 /tmp &
+chmod +777 /opt/QQ &
+
 sed -i 's/"main": ".\/application\/app_launcher\/index.js"/"main": ".\/LoadLiteLoader.js"/' /opt/QQ/resources/app/package.json && \
+
 rm -rf /run/dbus/pid &
 rm /tmp/.X1-lock &
 mkdir -p /var/run/dbus &
