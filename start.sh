@@ -13,6 +13,7 @@ if [ ! -f "/opt/QQ/resources/app/LiteLoader/plugins/NapCat/manifest.json" ]; the
 fi
 
 chmod 777 /tmp &
+chmod 777 /opt/QQ &
 rm -rf /run/dbus/pid &
 rm /tmp/.X1-lock &
 mkdir -p /var/run/dbus &
