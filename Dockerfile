@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y \
     rm -rf \
     /var/lib/apt/lists/* \
     /tmp/* \
-    /var/tmp/*
+    /var/tmp/*  && \
     # 安装novnc
     git config --global http.sslVerify false && \
     git config --global http.postBuffer 1048576000 && \
