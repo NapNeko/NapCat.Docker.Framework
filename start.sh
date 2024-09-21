@@ -24,4 +24,4 @@ nohup /opt/noVNC/utils/novnc_proxy --vnc localhost:5900 --listen 6081 --file-onl
 x11vnc -storepasswd $VNC_PASSWD ~/.vnc/passwd &
 export DISPLAY=:1
 # --disable-gpu 不加入
-exec supervisord
+qq --no-sandbox
