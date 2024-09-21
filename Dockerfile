@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     TZ=Asia/Shanghai
 
 COPY start.sh /root/start.sh
+COPY LoadLiteLoader.js /root/LoadLiteLoader.js
 
 RUN apt-get update && apt-get install -y \
     openbox \
@@ -56,8 +57,8 @@ RUN apt-get update && apt-get install -y \
     #安装LiteLoaderQQNT
     curl -L -o /tmp/LiteLoaderQQNT.zip https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/releases/download/1.2.1/LiteLoaderQQNT.zip && \
     mkdir -p /opt/QQ/resources/app/LiteLoader && \
-    # 创建index.js文件
-    echo "require('/opt/QQ/resources/app/LiteLoader/');require('./application/app_launcher/index.js');" > /opt/QQ/resources/app/LoadLiteLoader.js && \
+    # 移动文件/root/LoadLiteLoader.js到/opt/QQ/resources/app/LoadLiteLoader.js
+    mv /root/LoadLiteLoader.js /opt/QQ/resources/app/LoadLiteLoader.js && \
     # /opt/QQ/resources/app/package.json执行下面的替换
     #   "main": "./application/app_launcher/index.js",
     #   "main": "./LoadLiteLoader.js",
