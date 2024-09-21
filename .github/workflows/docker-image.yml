@@ -19,7 +19,7 @@ jobs:
       # Fork from https://github.com/koishijs/boilerplate/blob/master/.github/workflows/docker.yml
       - name: Run buildx and push
         env:
-          DOCKER_REPO: mlikiowa/napcat-framerwork-docker
+          DOCKER_REPO: mlikiowa/napcat-framework-docker
           GITHUB_REPO: NapNeko/NapCatQQ
         run: |
           TAG=$(curl "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | jq -r '.tag_name')
