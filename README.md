@@ -1,7 +1,15 @@
 # NapCat.Docker.Framerwrok
 NapCat Framerwork适配LinuxDocker项目
 
+[DockerHub](https://hub.docker.com/r/mlikiowa/napcat-framerwork-docker)
+
+## Support Platform/Arch
+- [x] Linux/Amd64
+- [x] Linux/Arm64
+
+## More
 5900 Vnc
+
 6081 NoVnc
 
 ```
