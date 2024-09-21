@@ -14,7 +14,7 @@ NapCat Framerwork适配LinuxDocker项目
 
 ```
 docker run -d \
--e VNC_PASSWD=vncpasswd
+-e VNC_PASSWD=vncpasswd \
 -p 5900:5900 \
 -p 6081:6081 \
 -p 3000:3000 \

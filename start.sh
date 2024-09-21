@@ -11,7 +11,10 @@ fi
 if [ ! -f "/opt/QQ/resources/app/LiteLoader/plugins/NapCat/manifest.json" ]; then
     unzip /tmp/NapCat.zip -d /opt/QQ/resources/app/LiteLoader/plugins/NapCat/
 fi
-
+# /opt/QQ/resources/app/package.json 如果main为./application/app_launcher/index.js执行下面的替换
+#   "main": "./application/app_launcher/index.js",
+#   "main": "./LoadLiteLoader.js",
+sed -i 's/"main": ".\/application\/app_launcher\/index.js"/"main": ".\/LoadLiteLoader.js"/' /opt/QQ/resources/app/package.json && \
 chmod 777 /tmp &
 chmod 777 /opt/QQ &
 rm -rf /run/dbus/pid &
