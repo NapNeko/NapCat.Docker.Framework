@@ -1,4 +1,4 @@
-# From LiteLoader
+// From LiteLoader
 const fs = require("fs");
 const path = require("path");
 const package_path = path.join(process.resourcesPath, "app/package.json");
