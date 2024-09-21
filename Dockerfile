@@ -54,6 +54,7 @@ RUN apt-get update && apt-get install -y \
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/1aff6d6d/linuxqq_3.2.12-28060_${arch}.deb && \
     dpkg -i linuxqq.deb && apt-get -f install -y && rm linuxqq.deb && \
+    chmod +777 /opt/QQ/ && \
     #安装LiteLoaderQQNT
     curl -L -o /tmp/LiteLoaderQQNT.zip https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/releases/download/1.2.1/LiteLoaderQQNT.zip && \
     mkdir -p /opt/QQ/resources/app/LiteLoader && \
