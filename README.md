@@ -1,5 +1,5 @@
 # NapCat.Docker.Framerwrok
-NapCat Framerwork适配LinuxDocker项目 By Mlikiowa
+NapCat Framerwork适配LinuxDocker项目 Power By Mlikiowa 
 
 [DockerHub](https://hub.docker.com/r/mlikiowa/napcat-framerwork-docker)
 
@@ -7,6 +7,10 @@ NapCat Framerwork适配LinuxDocker项目 By Mlikiowa
 - [x] Linux/Amd64
 - [x] Linux/Arm64
 
+## 更多命令
+进入容器 `docker exec -it napcatf bash`
+退出容器 `exit`
+输出日志 `docker logs napcatf`
 ## More
 5900 Vnc 可以通过这个端口通过vnc协议连接
 
