@@ -56,7 +56,7 @@ RUN apt-get update && apt-get install -y \
     dpkg -i linuxqq.deb && apt-get -f install -y && rm linuxqq.deb && \
     chmod 777 /opt/QQ/ && \
     #安装LiteLoaderQQNT
-    curl -L -o /tmp/LiteLoaderQQNT.zip https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/releases/download/1.2.1/LiteLoaderQQNT.zip && \
+    curl -L -o /tmp/LiteLoaderQQNT.zip https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/archive/refs/heads/main.zip && \
     mkdir -p /opt/QQ/resources/app/LiteLoader && \
     # 移动文件/root/LoadLiteLoader.js到/opt/QQ/resources/app/LoadLiteLoader.js
     mv /root/LoadLiteLoader.js /opt/QQ/resources/app/LoadLiteLoader.js && \
