@@ -12,11 +12,11 @@ NapCat Framerwork适配LinuxDocker项目 Power By Mlikiowa
 退出容器 `exit`
 输出日志 `docker logs napcatf`
 ## More
-`5900 Vnc 可以通过这个端口通过vnc协议连接 密码为下文VNC_PASSWD环境变量值`
+`IP:5900 Vnc 可以通过这个端口通过vnc协议连接 密码为下文VNC_PASSWD环境变量值`
 
-`6081 NoVnc 可以通过这个端口在网页连接NTQQ 密码为下文VNC_PASSWD环境变量值`
+`http://IP:6081/ NoVnc 可以通过这个端口在网页连接NTQQ 密码为下文VNC_PASSWD环境变量值`
 
-`6099 可以通过这个端口远程配置NapCat 密钥在NTQQ的设置里面napcat页面里token=xxxxxxx的字符串 xxxxxxx为默认密码 需要修改前往docker容器 在plugin里面修改webui.json`
+`http://IP:6099/webui/ 可以通过这个端口远程配置NapCat 密钥在NTQQ的设置里面napcat页面里token=xxxxxxx的字符串 xxxxxxx为默认密码 需要修改前往docker容器 在plugin里面修改webui.json`
 
 ```
 docker run -d \
