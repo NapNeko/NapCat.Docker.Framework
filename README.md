@@ -32,3 +32,6 @@ mlikiowa/napcat-framework-docker:latest
 ```
 ## 预览
 ![20406e29e28fff6a4c3370441d2db886](https://github.com/user-attachments/assets/14555658-12f0-4c5f-9627-11670fb18181)
+
+## 使用须知
+注意LiteLoader和NapCatQQ使用许可和开源协议
