@@ -14,7 +14,7 @@ NapCat Framework适配LinuxDocker项目 Power By Mlikiowa
 
 输出日志 `docker logs napcatf`
 ## More
-`IP:5900 Vnc `可以通过这个端口通过vnc协议连接 密码为下文VNC_PASSWD环境变量值
+`IP:5900 `Vnc可以通过这个端口通过vnc协议连接 密码为下文VNC_PASSWD环境变量值
 
 `http://IP:6081/ `NoVnc 可以通过这个端口在网页连接NTQQ 密码为下文VNC_PASSWD环境变量值
 
