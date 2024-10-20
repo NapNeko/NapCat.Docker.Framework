@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     libasound2 \
     fonts-wqy-zenhei \
     git \
+    jq \
     gnutls-bin \
     tzdata \
     fluxbox \
@@ -52,7 +53,7 @@ RUN apt-get update && apt-get install -y \
     cp /opt/noVNC/vnc.html /opt/noVNC/index.html && \
     #安装QQ
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/1aff6d6d/linuxqq_3.2.12-28060_${arch}.deb && \
+    curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/55fb6434/linuxqq_3.2.13-28788_${arch}.deb && \
     dpkg -i linuxqq.deb && apt-get -f install -y && rm linuxqq.deb && \
     chmod 777 /opt/QQ/ && \
     #安装LiteLoaderQQNT
@@ -65,6 +66,10 @@ RUN apt-get update && apt-get install -y \
     #   "main": "./application/app_launcher/index.js",
     #   "main": "./LoadLiteLoader.js",
     sed -i 's/"main": ".\/application\/app_launcher\/index.js"/"main": ".\/LoadLiteLoader.js"/' /opt/QQ/resources/app/package.json && \
+    # 安装packet-server
+    mkdir /opt/napcat.packet && \
+    curl -L -o /opt/napcat.packet/napcat.packet.linux https://github.com/NapNeko/NapCatQQ/releases/download/v3.0.0/napcat.packet.linux && \
+    chmod -R 755 /opt/napcat.packet/ && \
     # 下载
     curl -L -o /tmp/NapCat.zip https://github.com/NapNeko/NapCatQQ/releases/download/$(curl -Ls "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/NapCat.Framework.zip && \
     chmod +x ~/start.sh && \
