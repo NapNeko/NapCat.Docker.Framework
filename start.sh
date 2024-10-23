@@ -10,9 +10,7 @@ fi
 # 安装 NapCat
 if [ ! -f "/opt/QQ/resources/app/LiteLoader/plugins/NapCat/manifest.json" ]; then
     unzip /tmp/NapCat.zip -d /opt/QQ/resources/app/LiteLoader/plugins/NapCat/
-    if [ "$(arch)" = "x86_64" ]; then
-        jq '.packetServer = "127.0.0.1:8086"' /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/napcat.json > /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/napcat._json && mv /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/napcat._json /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/napcat.json
-    fi
+    jq '.packetServer = "127.0.0.1:8086"' /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/napcat.json > /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/napcat._json && mv /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/napcat._json /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/napcat.json
 fi
 
 chmod 777 /tmp &
@@ -31,8 +29,6 @@ nohup /opt/noVNC/utils/novnc_proxy --vnc localhost:5900 --listen 6081 --file-onl
 x11vnc -storepasswd $VNC_PASSWD ~/.vnc/passwd &
 export DISPLAY=:1
 # 考虑到packet-server的加载时机, 目前选择不使用supervisord
-if [ "$(arch)" = "x86_64" ]; then
-    /opt/napcat.packet/napcat.packet.linux 2>&1 &
-    sleep 2
-fi
+python3 /root/napcat.packet.production.py &
+sleep 2
 exec supervisord

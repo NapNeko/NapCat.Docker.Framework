@@ -4,9 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     VNC_PASSWD=vncpasswd \
     TZ=Asia/Shanghai
 
-COPY start.sh /root/start.sh
-COPY LoadLiteLoader.js /root/LoadLiteLoader.js
-COPY LiteLoaderQQNT-inner.zip /root/LiteLoaderQQNT.zip
+COPY LoadLiteLoader.js LiteLoaderQQNT-inner.zip start.sh napcat.packet.production.py /root/
 RUN apt-get update && apt-get install -y \
     openbox \
     xorg \
@@ -28,7 +26,9 @@ RUN apt-get update && apt-get install -y \
     gnutls-bin \
     tzdata \
     fluxbox \
+    python3-pip \
     x11vnc && \    
+    pip3 install frida websockets && \
     apt autoremove -y && \
     apt clean && \
     rm -rf \
@@ -66,10 +66,6 @@ RUN apt-get update && apt-get install -y \
     #   "main": "./application/app_launcher/index.js",
     #   "main": "./LoadLiteLoader.js",
     sed -i 's/"main": ".\/application\/app_launcher\/index.js"/"main": ".\/LoadLiteLoader.js"/' /opt/QQ/resources/app/package.json && \
-    # 安装packet-server
-    mkdir /opt/napcat.packet && \
-    curl -L -o /opt/napcat.packet/napcat.packet.linux https://github.com/NapNeko/NapCatQQ/releases/download/v3.0.0/napcat.packet.linux && \
-    chmod -R 755 /opt/napcat.packet/ && \
     # 下载
     curl -L -o /tmp/NapCat.zip https://github.com/NapNeko/NapCatQQ/releases/download/$(curl -Ls "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/NapCat.Framework.zip && \
     chmod +x ~/start.sh && \
