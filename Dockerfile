@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     VNC_PASSWD=vncpasswd \
     TZ=Asia/Shanghai
 
-COPY LoadLiteLoader.js LiteLoaderQQNT-inner.zip start.sh napcat.packet.production.py /root/
+COPY LoadLiteLoader.js LiteLoaderQQNT-inner.zip start.sh /root/
 RUN apt-get update && apt-get install -y \
     openbox \
     xorg \
@@ -22,13 +22,10 @@ RUN apt-get update && apt-get install -y \
     libasound2 \
     fonts-wqy-zenhei \
     git \
-    jq \
     gnutls-bin \
     tzdata \
     fluxbox \
-    python3-pip \
     x11vnc && \    
-    pip3 install frida websockets && \
     apt autoremove -y && \
     apt clean && \
     rm -rf \
