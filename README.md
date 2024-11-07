@@ -29,7 +29,6 @@ docker run -d \
 -p 3001:3001 \
 -p 6099:6099 \
 --name napcatf \
---privileged \
 --restart=always \
 mlikiowa/napcat-framework-docker:latest
 ```
