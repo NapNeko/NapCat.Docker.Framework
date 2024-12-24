@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install -y \
     cp /opt/noVNC/vnc.html /opt/noVNC/index.html && \
     #安装QQ
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/e379390a/linuxqq_3.2.13-29456_${arch}.deb && \
+    curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/63c751e8/linuxqq_3.2.15-30899_${arch}.deb && \
     dpkg -i linuxqq.deb && apt-get -f install -y && rm linuxqq.deb && \
     chmod 777 /opt/QQ/ && \
     #安装LiteLoaderQQNT
