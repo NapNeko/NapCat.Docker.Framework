@@ -34,12 +34,14 @@ jobs:
           TAG: ${{ needs.get-tag.outputs.tag }}
         run: |
           docker buildx build \
-            --output "type=image,push=true" \
+            --load \
             --platform linux/amd64 \
             --tag ${DOCKER_REPO}:${TAG}-amd64 \
             --tag ${DOCKER_REPO}:latest-amd64 \
             --file ./Dockerfile \
             .
+          docker push ${DOCKER_REPO}:${TAG}-amd64
+          docker push ${DOCKER_REPO}:latest-amd64
       - name: Docker Hub logout
         if: always()
         run: docker logout
@@ -63,12 +65,14 @@ jobs:
           TAG: ${{ needs.get-tag.outputs.tag }}
         run: |
           docker buildx build \
-            --output "type=image,push=true" \
+            --load \
             --platform linux/arm64 \
             --tag ${DOCKER_REPO}:${TAG}-arm64 \
             --tag ${DOCKER_REPO}:latest-arm64 \
             --file ./Dockerfile \
             .
+          docker push ${DOCKER_REPO}:${TAG}-arm64
+          docker push ${DOCKER_REPO}:latest-arm64
       - name: Docker Hub logout
         if: always()
         run: docker logout
