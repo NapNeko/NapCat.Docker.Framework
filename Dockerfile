@@ -55,7 +55,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/5aa2d8d6/linuxqq_3.2.17-34740_${arch}.deb && \
+    curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/c773cdf7/linuxqq_3.2.19-39038_${arch}.deb && \
     dpkg -i linuxqq.deb && apt-get -f install -y && rm linuxqq.deb && \
     chmod 777 /opt/QQ/
 
