@@ -6,7 +6,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# 使用 netselect-apt 快速换源
+RUN apt-get update && apt-get install -y --no-install-recommends netselect-apt && \
+    netselect-apt -n && \
+    cp sources.list /etc/apt/sources.list && \
+    apt-get update
+
+RUN apt-get install -y --no-install-recommends \
     openbox \
     xorg \
     dbus-user-session \
