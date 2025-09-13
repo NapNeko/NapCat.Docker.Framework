@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     openbox \
     xorg \
     dbus-user-session \
@@ -26,35 +26,27 @@ RUN apt-get install -y \
     gnutls-bin \
     tzdata \
     fluxbox \
-    x11vnc && \    
-    apt autoremove -y && \
-    apt clean && \
-    rm -rf \
-    /var/lib/apt/lists/* \
-    /tmp/* \
-    /var/tmp/* && \
+    x11vnc && \
     mkdir -p ~/.vnc && \
-    echo "${TZ}" > /etc/timezone && \ 
+    echo "${TZ}" > /etc/timezone && \
     ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    apt autoremove -y && \
-    apt clean && \
-    rm -rf \
-    /var/lib/apt/lists/* \
-    /tmp/* \
-    /var/tmp/*  && \
     # 安装novnc
     git config --global http.sslVerify false && \
     git config --global http.postBuffer 1048576000 && \
     cd /opt && git clone https://github.com/novnc/noVNC.git && \
     cd /opt/noVNC/utils && git clone https://github.com/novnc/websockify.git && \
-    cp /opt/noVNC/vnc.html /opt/noVNC/index.html
-
-#安装QQ
+    cp /opt/noVNC/vnc.html /opt/noVNC/index.html && \
+    # 最终清理
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*#安装QQ
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/c773cdf7/linuxqq_3.2.19-39038_${arch}.deb && \
-    dpkg -i linuxqq.deb && apt-get -f install -y && rm linuxqq.deb && \
+    dpkg -i linuxqq.deb && apt-get -f install -y --no-install-recommends && \
+    rm linuxqq.deb && \
     chmod 777 /opt/QQ/
 
 #安装LiteLoaderQQNT
