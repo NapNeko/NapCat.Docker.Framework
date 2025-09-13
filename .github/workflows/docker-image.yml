@@ -4,7 +4,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-dockerhub:
+  get-tag:
+    runs-on: ubuntu-22.04
+    outputs:
+      tag: ${{ steps.get-tag.outputs.tag }}
+    steps:
+      - name: Get latest tag
+        id: get-tag
+        run: |
+          TAG=$(curl "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | jq -r '.tag_name')
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+  build-amd64:
+    needs: get-tag
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -16,20 +28,76 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      # Fork from https://github.com/koishijs/boilerplate/blob/master/.github/workflows/docker.yml
-      - name: Run buildx and push
+      - name: Build and push amd64 image
         env:
           DOCKER_REPO: mlikiowa/napcat-framework-docker
-          GITHUB_REPO: NapNeko/NapCatQQ
+          TAG: ${{ needs.get-tag.outputs.tag }}
         run: |
-          TAG=$(curl "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | jq -r '.tag_name')
           docker buildx build \
             --output "type=image,push=true" \
-            --platform linux/amd64,linux/arm64 \
-            --tag ${DOCKER_REPO}:$TAG \
-            --tag ${DOCKER_REPO}:latest \
+            --platform linux/amd64 \
+            --tag ${DOCKER_REPO}:${TAG}-amd64 \
+            --tag ${DOCKER_REPO}:latest-amd64 \
             --file ./Dockerfile \
             .
+      - name: Docker Hub logout
+        if: always()
+        run: docker logout
+
+  build-arm64:
+    needs: get-tag
+    runs-on: ubuntu-22.04-arm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push arm64 image
+        env:
+          DOCKER_REPO: mlikiowa/napcat-framework-docker
+          TAG: ${{ needs.get-tag.outputs.tag }}
+        run: |
+          docker buildx build \
+            --output "type=image,push=true" \
+            --platform linux/arm64 \
+            --tag ${DOCKER_REPO}:${TAG}-arm64 \
+            --tag ${DOCKER_REPO}:latest-arm64 \
+            --file ./Dockerfile \
+            .
+      - name: Docker Hub logout
+        if: always()
+        run: docker logout
+
+  create-manifest:
+    needs: [get-tag, build-amd64, build-arm64]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Create and push multi-arch manifest
+        env:
+          DOCKER_REPO: mlikiowa/napcat-framework-docker
+          TAG: ${{ needs.get-tag.outputs.tag }}
+        run: |
+          # Create and push tagged manifest
+          docker manifest create ${DOCKER_REPO}:${TAG} \
+            ${DOCKER_REPO}:${TAG}-amd64 \
+            ${DOCKER_REPO}:${TAG}-arm64
+          docker manifest push ${DOCKER_REPO}:${TAG}
+          
+          # Create and push latest manifest
+          docker manifest create ${DOCKER_REPO}:latest \
+            ${DOCKER_REPO}:latest-amd64 \
+            ${DOCKER_REPO}:latest-arm64
+          docker manifest push ${DOCKER_REPO}:latest
       - name: Docker Hub logout
         if: always()
         run: docker logout
