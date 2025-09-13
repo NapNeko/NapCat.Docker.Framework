@@ -8,7 +8,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloa
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get install -y \
+    apt-get update && apt-get install -y \
     openbox \
     xorg \
     dbus-user-session \
@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     gnutls-bin \
     tzdata \
     fluxbox \
-    x11vnc && \
+    x11vnc && \    
     apt autoremove -y && \
     apt clean && \
     rm -rf \
@@ -57,9 +57,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
     curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/c773cdf7/linuxqq_3.2.19-39038_${arch}.deb && \
     dpkg -i linuxqq.deb && apt-get -f install -y && rm linuxqq.deb && \
-    chmod 777 /opt/QQ/ && \
-    # 清理apt缓存以减小镜像大小
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    chmod 777 /opt/QQ/
 
 #安装LiteLoaderQQNT
 COPY LoadLiteLoader.js LiteLoaderQQNT-inner.zip start.sh /root/
