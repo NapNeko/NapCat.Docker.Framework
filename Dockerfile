@@ -65,7 +65,7 @@ RUN mv /root/LiteLoaderQQNT-inner.zip /tmp/LiteLoaderQQNT.zip && \
     #   "main": "./LoadLiteLoader.js",
     sed -i 's/"main": ".\/application.asar\/app_launcher\/index.js"/"main": ".\/LoadLiteLoader.js"/' /opt/QQ/resources/app/package.json && \
     # 下载
-    curl -L -o /tmp/NapCat.zip https://github.com/NapNeko/NapCatQQ/releases/download/$(curl -Ls "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/NapCat.Framework.zip && \
+    curl -k -L -o /tmp/NapCat.zip https://github.com/NapNeko/NapCatQQ/releases/download/$(curl -Ls "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/NapCat.Framework.zip && \
     chmod +x ~/start.sh && \
     useradd --no-log-init -d /app napcat && \
     mkdir /app && \
