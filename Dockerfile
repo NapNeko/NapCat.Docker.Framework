@@ -11,9 +11,11 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloa
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openbox \
     xorg \
+    libatspi2.0-0 \
     dbus-user-session \
     curl \
     unzip \
+    libgtk-3-0 \
     xvfb \
     supervisor \
     libnotify4 \
