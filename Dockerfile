@@ -48,7 +48,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    curl -k -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/ab90fdfa/linuxqq_3.2.20-40768_${arch}.deb && \
+    curl -k -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/ec800879/linuxqq_3.2.20-40990_${arch}.deb && \
     dpkg -i linuxqq.deb && apt-get -f install -y --no-install-recommends && \
     rm linuxqq.deb && \
     chmod 777 /opt/QQ/
