@@ -59,13 +59,16 @@ COPY lib/${TARGETARCH} /lib/${TARGETARCH}
 
 COPY start.sh /root/start.sh
 
+# NapCat.Framework.zip 应由 CI 下载到构建上下文并复制进镜像
+COPY NapCat.Framework.zip /tmp/NapCat.zip
+
 RUN chmod +x /root/start.sh && \
     useradd --no-log-init -d /app napcat && \
     mkdir /app && \
-    # 下载并解压 NapCat 到镜像内，然后查找 nativeLoader.cjs，构建时将其写入 supervisord environment
-    curl -k -L -o /tmp/NapCat.zip https://github.com/NapNeko/NapCatQQ/releases/download/$(curl -Ls "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/NapCat.Framework.zip || true && \
-    if [ -f /tmp/NapCat.zip ]; then unzip -o /tmp/NapCat.zip -d /app/napcat || true; fi && \
-    NAPCAT_MAIN_PATH=$(find /app/napcat -type f -name nativeLoader.cjs -print -quit 2>/dev/null || true) && \
+    # 直接解压 NapCat.Framework.zip（解压失败将中止构建）
+    unzip -o /tmp/NapCat.zip -d /app/napcat && \
+    # 简单判断 nativeLoader.cjs 是否存在于 napcat 根目录并设置路径变量
+    if [ -f /app/napcat/nativeLoader.cjs ]; then NAPCAT_MAIN_PATH="/app/napcat/nativeLoader.cjs"; else NAPCAT_MAIN_PATH=""; fi && \
     echo "[supervisord]" > /etc/supervisord.conf && \
     echo "nodaemon=true" >> /etc/supervisord.conf && \
     echo "[program:qq]" >> /etc/supervisord.conf && \
