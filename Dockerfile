@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # check=skip=SecretsUsedInArgOrEnv
-FROM debian:stable-slim
+FROM debian:12-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
     VNC_PASSWD=vncpasswd \
@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
     supervisor \
     libnotify4 \
+    prelink \
     libnss3 \
     xdg-utils \
     libsecret-1-0 \
@@ -67,6 +68,7 @@ RUN chmod +x /root/start.sh && \
     mkdir /app && \
     # 直接解压 NapCat.Framework.zip（解压失败将中止构建）
     unzip -o /tmp/NapCat.zip -d /app/napcat && \
+    execstack -s /app/napcat/native/packet/MoeHoo.linux.x64.node
     # 简单判断 nativeLoader.cjs 是否存在于 napcat 根目录并设置路径变量
     if [ -f /app/napcat/nativeLoader.cjs ]; then NAPCAT_MAIN_PATH="/app/napcat/nativeLoader.cjs"; else NAPCAT_MAIN_PATH=""; fi && \
     echo "[supervisord]" > /etc/supervisord.conf && \
