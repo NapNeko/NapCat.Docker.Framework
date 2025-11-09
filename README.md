@@ -7,6 +7,9 @@ NapCat Framework适配LinuxDocker项目 Power By Mlikiowa
 - [x] Linux/Amd64
 - [x] Linux/Arm64
 
+## 查看密码
+`docker exec -it napcatf cat /app/napcat/config/webui.json`
+
 ## 更多命令
 进入容器 `docker exec -it napcatf bash`
 
