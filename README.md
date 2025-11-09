@@ -15,9 +15,9 @@ NapCat Framework适配LinuxDocker项目 Power By Mlikiowa
 输出日志 `docker logs napcatf`
 
 ## 命令行操作(进入容器后)
-配置文件目录 `/opt/QQ/resources/app/LiteLoader/plugins/NapCat/config`
+配置文件目录 `/opt/QQ/resources/app`
 
-获取/修改WebUi密码(第二次启动生效)  `cat /opt/QQ/resources/app/LiteLoader/plugins/NapCat/config/webui.json`
+获取/修改服务相关配置请在容器内根据实际路径查找对应文件。
 
 ## More
 `IP:5900 `Vnc可以通过这个端口通过vnc协议连接 密码为下文VNC_PASSWD环境变量值
@@ -47,4 +47,4 @@ mlikiowa/napcat-framework-docker:latest
 需要挂载对应文件目录
 
 ## 使用须知
-注意LiteLoader和NapCatQQ使用许可和开源协议
+请注意遵守第三方软件的使用许可和开源协议

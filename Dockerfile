@@ -48,28 +48,23 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    curl -k -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/ec800879/linuxqq_3.2.20-40990_${arch}.deb && \
+    curl -k -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/18039323/linuxqq_3.2.21-41857_${arch}.deb && \
     dpkg -i linuxqq.deb && apt-get -f install -y --no-install-recommends && \
     rm linuxqq.deb && \
     chmod 777 /opt/QQ/
 
-#安装LiteLoaderQQNT
-COPY LoadLiteLoader.js LiteLoaderQQNT-inner.zip start.sh /root/
-RUN mv /root/LiteLoaderQQNT-inner.zip /tmp/LiteLoaderQQNT.zip && \
-    #curl -L -o /tmp/LiteLoaderQQNT.zip https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/archive/f3711f41cc5c22fa6384264345aad45e1fd1c8f2.zip && \
-    mkdir -p /opt/QQ/resources/app/LiteLoader && \
-    # 移动文件/root/LoadLiteLoader.js到/opt/QQ/resources/app/LoadLiteLoader.js
-    mv /root/LoadLiteLoader.js /opt/QQ/resources/app/LoadLiteLoader.js && \
-    # /opt/QQ/resources/app/package.json执行下面的替换
-    #   "main": "./application/app_launcher/index.js",
-    #   "main": "./LoadLiteLoader.js",
-    sed -i 's/"main": ".\/application.asar\/app_launcher\/index.js"/"main": ".\/LoadLiteLoader.js"/' /opt/QQ/resources/app/package.json && \
-    # 下载
-    curl -k -L -o /tmp/NapCat.zip https://github.com/NapNeko/NapCatQQ/releases/download/$(curl -Ls "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/NapCat.Framework.zip && \
-    chmod +x ~/start.sh && \
+ARG TARGETARCH
+COPY lib/${TARGETARCH} /lib/${TARGETARCH}
+
+COPY start.sh /root/start.sh
+
+RUN chmod +x /root/start.sh && \
     useradd --no-log-init -d /app napcat && \
     mkdir /app && \
-    \
+    # 下载并解压 NapCat 到镜像内，然后查找 nativeLoader.cjs，构建时将其写入 supervisord environment
+    curl -k -L -o /tmp/NapCat.zip https://github.com/NapNeko/NapCatQQ/releases/download/$(curl -Ls "https://api.github.com/repos/NapNeko/NapCatQQ/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')/NapCat.Framework.zip || true && \
+    if [ -f /tmp/NapCat.zip ]; then unzip -o /tmp/NapCat.zip -d /app/napcat || true; fi && \
+    NAPCAT_MAIN_PATH=$(find /app/napcat -type f -name nativeLoader.cjs -print -quit 2>/dev/null || true) && \
     echo "[supervisord]" > /etc/supervisord.conf && \
     echo "nodaemon=true" >> /etc/supervisord.conf && \
     echo "[program:qq]" >> /etc/supervisord.conf && \
@@ -79,7 +74,7 @@ RUN mv /root/LiteLoaderQQNT-inner.zip /tmp/LiteLoaderQQNT.zip && \
     echo "stdout_logfile_maxbytes=0" >> /etc/supervisord.conf && \
     echo "stderr_logfile=/dev/stderr" >> /etc/supervisord.conf && \
     echo "stderr_logfile_maxbytes=0" >> /etc/supervisord.conf && \
-    echo 'environment=HOME="/app",DISPLAY=":1"' >> /etc/supervisord.conf
+    echo "environment=HOME=\"/app\",DISPLAY=\":1\",LD_PRELOAD=\"/lib/${TARGETARCH}/libnapiloader.so\",NAPCAT_MAIN_PATH=\"${NAPCAT_MAIN_PATH}\"" >> /etc/supervisord.conf && \
+    rm -f /tmp/NapCat.zip
 
-VOLUME ["/opt/QQ/resources/app/LiteLoader"]
 CMD ["/bin/bash", "-c", "startx & sh /root/start.sh"]

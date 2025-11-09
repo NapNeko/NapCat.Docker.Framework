@@ -1,21 +1,8 @@
 #!/bin/bash
 
-mkdir -p /opt/QQ/resources/app/LiteLoader/plugins/NapCat
-
-# 安装 LiteLoader
-if [ ! -f "/opt/QQ/resources/app/LiteLoader/package.json" ]; then
-    unzip /tmp/LiteLoaderQQNT.zip -d /opt/QQ/resources/app/LiteLoader/
-fi
-
-# 安装 NapCat
-if [ ! -f "/opt/QQ/resources/app/LiteLoader/plugins/NapCat/manifest.json" ]; then
-    unzip /tmp/NapCat.zip -d /opt/QQ/resources/app/LiteLoader/plugins/NapCat/
-fi
-
+# Basic environment and X services (LiteLoader removed)
 chmod 777 /tmp &
 chmod +777 /opt/QQ &
-
-sed -i 's/"main": ".\/application\/app_launcher\/index.js"/"main": ".\/LoadLiteLoader.js"/' /opt/QQ/resources/app/package.json && \
 
 rm -rf /run/dbus/pid &
 rm /tmp/.X1-lock &
@@ -34,6 +21,6 @@ usermod -o -u ${NAPCAT_UID} napcat
 groupmod -o -g ${NAPCAT_GID} napcat
 usermod -g ${NAPCAT_GID} napcat
 chown -R ${NAPCAT_UID}:${NAPCAT_GID} /app
-chown -R ${NAPCAT_UID}:${NAPCAT_GID} /opt/QQ/resources/app/LiteLoader
+chown -R ${NAPCAT_UID}:${NAPCAT_GID} /opt/QQ
 
 exec supervisord
