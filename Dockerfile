@@ -78,7 +78,7 @@ RUN chmod +x /root/start.sh && \
     echo "stdout_logfile_maxbytes=0" >> /etc/supervisord.conf && \
     echo "stderr_logfile=/dev/stderr" >> /etc/supervisord.conf && \
     echo "stderr_logfile_maxbytes=0" >> /etc/supervisord.conf && \
-    echo "environment=HOME=\"/app\",DISPLAY=\":1\",LD_PRELOAD=\"/lib/${TARGETARCH}/libnapiloader.so\",NAPCAT_MAIN_PATH=\"${NAPCAT_MAIN_PATH}\"" >> /etc/supervisord.conf && \
+    echo "environment=HOME=\"/app\",DISPLAY=\":1\",LD_PRELOAD=\"/lib/${TARGETARCH}/libnapiloader.so\",NAPCAT_EXTERNAL_SCRIPT_PATH=\"${NAPCAT_MAIN_PATH}\"" >> /etc/supervisord.conf && \
     rm -f /tmp/NapCat.zip
 
 CMD ["/bin/bash", "-c", "startx & sh /root/start.sh"]
