@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
     supervisor \
     libnotify4 \
-    patchelf \
     libnss3 \
     xdg-utils \
     libsecret-1-0 \
@@ -45,7 +44,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # 最终清理
     apt-get autoremove -y && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*#安装QQ
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN set -eux; \
+    ARCH=$(dpkg --print-architecture); \
+    PKG_URL="https://deb.debian.org/debian/pool/main/p/patchelf/patchelf_0.18.0-1.4_${ARCH}.deb"; \
+    echo "Installing patchelf 0.18.0-1.4 for arch=${ARCH} from ${PKG_URL}"; \
+    apt-get update; \
+    if curl -fsSL -o /tmp/patchelf.deb "$PKG_URL"; then \
+        dpkg -i /tmp/patchelf.deb || apt-get -f install -y --no-install-recommends; \
+        rm -f /tmp/patchelf.deb; \
+    else \
+        echo "Requested patchelf version not found at ${PKG_URL}, falling back to apt repository"; \
+        apt-get update && apt-get install -y --no-install-recommends patchelf; \
+    fi && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
@@ -68,6 +82,8 @@ RUN chmod +x /root/start.sh && \
     mkdir /app && \
     # 直接解压 NapCat.Framework.zip（解压失败将中止构建）
     unzip -o /tmp/NapCat.zip -d /app/napcat && \
+    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.x64.node && \
+    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.arm64.node
     # 简单判断 nativeLoader.cjs 是否存在于 napcat 根目录并设置路径变量
     if [ -f /app/napcat/nativeLoader.cjs ]; then NAPCAT_MAIN_PATH="/app/napcat/nativeLoader.cjs"; else NAPCAT_MAIN_PATH=""; fi && \
     echo "[supervisord]" > /etc/supervisord.conf && \
@@ -81,9 +97,5 @@ RUN chmod +x /root/start.sh && \
     echo "stderr_logfile_maxbytes=0" >> /etc/supervisord.conf && \
     echo "environment=HOME=\"/app\",DISPLAY=\":1\",LD_PRELOAD=\"/lib/${TARGETARCH}/libnapiloader.so\",NAPCAT_EXTERNAL_SCRIPT_PATH=\"${NAPCAT_MAIN_PATH}\"" >> /etc/supervisord.conf && \
     rm -f /tmp/NapCat.zip
-
-RUN ls -l /app/napcat/native/packet/MoeHoo.linux.*.node && \
-    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.x64.node && \
-    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.arm64.node
 
 CMD ["/bin/bash", "-c", "startx & sh /root/start.sh"]
