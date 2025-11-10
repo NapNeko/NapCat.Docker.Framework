@@ -68,8 +68,6 @@ RUN chmod +x /root/start.sh && \
     mkdir /app && \
     # 直接解压 NapCat.Framework.zip（解压失败将中止构建）
     unzip -o /tmp/NapCat.zip -d /app/napcat && \
-    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.x64.node && \
-    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.arm64.node && \
     # 简单判断 nativeLoader.cjs 是否存在于 napcat 根目录并设置路径变量
     if [ -f /app/napcat/nativeLoader.cjs ]; then NAPCAT_MAIN_PATH="/app/napcat/nativeLoader.cjs"; else NAPCAT_MAIN_PATH=""; fi && \
     echo "[supervisord]" > /etc/supervisord.conf && \
@@ -83,5 +81,9 @@ RUN chmod +x /root/start.sh && \
     echo "stderr_logfile_maxbytes=0" >> /etc/supervisord.conf && \
     echo "environment=HOME=\"/app\",DISPLAY=\":1\",LD_PRELOAD=\"/lib/${TARGETARCH}/libnapiloader.so\",NAPCAT_EXTERNAL_SCRIPT_PATH=\"${NAPCAT_MAIN_PATH}\"" >> /etc/supervisord.conf && \
     rm -f /tmp/NapCat.zip
+
+RUN ls -l /app/napcat/native/packet/MoeHoo.linux.*.node && \
+    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.x64.node && \
+    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.arm64.node
 
 CMD ["/bin/bash", "-c", "startx & sh /root/start.sh"]
