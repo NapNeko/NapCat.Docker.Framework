@@ -56,7 +56,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     chmod 777 /opt/QQ/
 
 ARG TARGETARCH
-COPY lib/${TARGETARCH} /lib/${TARGETARCH}
+COPY napi/${TARGETARCH} /lib/${TARGETARCH}
 
 COPY start.sh /root/start.sh
 
