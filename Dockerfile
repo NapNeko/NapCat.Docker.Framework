@@ -46,20 +46,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN set -eux; \
-    ARCH=$(dpkg --print-architecture); \
-    PKG_URL="https://deb.debian.org/debian/pool/main/p/patchelf/patchelf_0.18.0-1.4_${ARCH}.deb"; \
-    echo "Installing patchelf 0.18.0-1.4 for arch=${ARCH} from ${PKG_URL}"; \
-    apt-get update; \
-    if curl -fsSL -o /tmp/patchelf.deb "$PKG_URL"; then \
-        dpkg -i /tmp/patchelf.deb || apt-get -f install -y --no-install-recommends; \
-        rm -f /tmp/patchelf.deb; \
-    else \
-        echo "Requested patchelf version not found at ${PKG_URL}, falling back to apt repository"; \
-        apt-get update && apt-get install -y --no-install-recommends patchelf; \
-    fi && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
@@ -82,8 +68,6 @@ RUN chmod +x /root/start.sh && \
     mkdir /app && \
     # 直接解压 NapCat.Framework.zip（解压失败将中止构建）
     unzip -o /tmp/NapCat.zip -d /app/napcat && \
-    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.x64.node && \
-    patchelf --clear-execstack /app/napcat/native/packet/MoeHoo.linux.arm64.node && \
     # 简单判断 nativeLoader.cjs 是否存在于 napcat 根目录并设置路径变量
     if [ -f /app/napcat/nativeLoader.cjs ]; then NAPCAT_MAIN_PATH="/app/napcat/nativeLoader.cjs"; else NAPCAT_MAIN_PATH=""; fi && \
     echo "[supervisord]" > /etc/supervisord.conf && \
