@@ -50,7 +50,13 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    aria2c --check-certificate=false -x16 -s16 -o linuxqq.deb "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.32/beta/fd40a3ec/linuxqq_3.2.30-50969_${arch}.deb" && \
+    # LinuxQQ 3.2.32-52194。腾讯会下架旧版本的下载链接，官方 CDN 下不到时改从 GitHub 上的镜像下载
+    QQ_FILE="QQ_3.2.32_260812_${arch}_01.deb" && \
+    for QQ_URL in "https://qqdl.gtimg.cn/qqfile/QQNT/9.9.33/release/3f89efc5/${QQ_FILE}" \
+                  "https://github.com/Rodert/qq-versions/releases/download/qq-packages-20260813-1d08f1d4/${QQ_FILE}"; do \
+        rm -f linuxqq.deb linuxqq.deb.aria2; \
+        aria2c --check-certificate=false -x16 -s16 -o linuxqq.deb "${QQ_URL}" && break; \
+    done && \
     dpkg -i linuxqq.deb && apt-get -f install -y --no-install-recommends && \
     rm linuxqq.deb && \
     chmod 777 /opt/QQ/
